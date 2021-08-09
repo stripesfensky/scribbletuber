@@ -22,13 +22,17 @@
                 var analyzer = audio.createAnalyser();
                 var source = audio.createMediaStreamSource(stream);
                 source.connect(analyzer);
+                //analyzer.connect(audio.destination);
+                analyzer.fftSize = 32;
 
                 var dataArray = new Uint8Array(analyzer.frequencyBinCount);
 
                 function speak() {
                     drawVisual = requestAnimationFrame(speak);
                     analyzer.getByteFrequencyData(dataArray);
-                    if (dataArray[0] > 95) {
+                    var reduction = dataArray.reduce((x, y) => x + y);
+                    console.log(reduction);
+                    if (reduction > 1000) {
                         document.getElementById("character").style.backgroundImage = "url(\"img/character_open.gif\")";
                     }
                     else {
@@ -39,6 +43,7 @@
                 speak();
             }).catch(function(err){
                 console.log("Permission to record not allowed by client.");
+                console.log(err);
             });
             
         </script>
