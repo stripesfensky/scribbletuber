@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Scribbletuber</title>
-        <meta name="viewport" content="width=device-width, intial-scale=1.0">
         <style>
             #character {
                 background-image: url("img/character_close.gif");
@@ -14,6 +15,33 @@
                 position: absolute;
             }
         </style>
+        <script>            
+            var constraints = {audio: true, video: false};
+            navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                var audio = new AudioContext();
+                var analyzer = audio.createAnalyser();
+                var source = audio.createMediaStreamSource(stream);
+                source.connect(analyzer);
+
+                var dataArray = new Uint8Array(analyzer.frequencyBinCount);
+
+                function speak() {
+                    drawVisual = requestAnimationFrame(speak);
+                    analyzer.getByteFrequencyData(dataArray);
+                    if (dataArray[0] > 95) {
+                        document.getElementById("character").style.backgroundImage = "url(\"img/character_open.gif\")";
+                    }
+                    else {
+                        document.getElementById("character").style.backgroundImage = "url(\"img/character_close.gif\")";
+                    }
+                }
+
+                speak();
+            }).catch(function(err){
+                console.log("Permission to record not allowed by client.");
+            });
+            
+        </script>
     </head>
     <body>
         <div id="character"></div>
