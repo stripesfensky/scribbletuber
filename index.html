@@ -14,9 +14,13 @@
                 height: 500px;
                 position: absolute;
             }
+            #interface {
+                position: absolute;
+                z-index: 1;
+            }
         </style>
         <script>            
-            var constraints = {audio: true, video: false};
+            /* var constraints = {audio: true, video: false};
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
                 var audio = new AudioContext();
                 var analyzer = audio.createAnalyser();
@@ -42,13 +46,50 @@
 
                 speak();
             }).catch(function(err){
-                console.log("Permission to record not allowed by client.");
                 console.log(err);
-            });
-            
+            }); */
+
+            document.addEventListener('click', function(event) {
+                var interface = document.getElementById("interface").style;
+                if (interface.visibility === "visible" || interface.visibility === "") {
+                    interface.visibility = "hidden";
+                }
+                else {
+                    interface.visibility = "visible";
+                }
+               
+            })
+
+            function resize(px, fl) {
+                var character = document.getElementById("character").style;
+                var size = document.getElementById("size");
+                var size_output = document.getElementById("size_output");
+
+                if (fl === 0) {
+                    character.width = px + "px";
+                    character.height = px + "px";
+                    size_output.value = px + "px";
+                }
+                else {
+                    character.width = "500px";
+                    character.height = "500px";
+                }
+            }
         </script>
     </head>
     <body>
         <div id="character"></div>
+        <div id="interface">
+            <fieldset>
+                <legend>Configuration</legend>
+                <form>
+                    <label for="size">Size</label>
+                    <input type="range" id="size" min="300" max="1000" value="500" aria-valuenow="500" step="1" oninput="resize(value, 0)">
+                    <output for="size" id="size_output">500px</output>
+                    <input type="reset" value="Reset" onclick="resize(0, 1)">
+                </form>
+
+            </fieldset>
+        </div>
     </body>
 </html>
