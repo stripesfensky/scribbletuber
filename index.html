@@ -51,13 +51,7 @@
 
             document.addEventListener('dblclick', function(event) {
                 var interface = document.getElementById("interface").style;
-                if (interface.visibility === "visible" || interface.visibility === "") {
-                    interface.visibility = "hidden";
-                }
-                else {
-                    interface.visibility = "visible";
-                }
-               
+                interface.visibility = "visible";
             })
 
             function resize(px, fl) {
@@ -75,6 +69,11 @@
                     character.height = "500px";
                 }
             }
+
+            function hideInterface() {
+                var interface = document.getElementById("interface").style;
+                interface.visibility = "hidden";
+            }
         </script>
     </head>
     <body>
@@ -84,11 +83,12 @@
                 <legend>Configuration</legend>
                 <form>
                     <label for="size">Size</label>
-                    <input type="range" id="size" min="300" max="1000" value="500" aria-valuenow="500" step="1" oninput="resize(value, 0)">
+                    <input type="range" id="size" min="300" max="1000" value="500" step="1" oninput="resize(value, 0)">
                     <output for="size" id="size_output">500px</output>
-                    <input type="reset" value="Reset" onclick="resize(0, 1)">
+                    <input type="reset" value="Reset Size" onclick="resize(0, 1)">
                 </form>
-
+                <hr />
+                <input type="button" id="hide_interface" value="Hide" onclick="hideInterface()"></button>
             </fieldset>
         </div>
     </body>
