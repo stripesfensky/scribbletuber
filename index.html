@@ -20,13 +20,12 @@
             }
         </style>
         <script>            
-            /* var constraints = {audio: true, video: false};
+            var constraints = {audio: true, video: false};
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
                 var audio = new AudioContext();
                 var analyzer = audio.createAnalyser();
                 var source = audio.createMediaStreamSource(stream);
                 source.connect(analyzer);
-                //analyzer.connect(audio.destination);
                 analyzer.fftSize = 32;
 
                 var dataArray = new Uint8Array(analyzer.frequencyBinCount);
@@ -34,25 +33,15 @@
                 function speak() {
                     drawVisual = requestAnimationFrame(speak);
                     analyzer.getByteFrequencyData(dataArray);
-                    var reduction = dataArray.reduce((x, y) => x + y);
-                    console.log(reduction);
-                    if (reduction > 1000) {
-                        document.getElementById("character").style.backgroundImage = "url(\"img/character_open.gif\")";
-                    }
-                    else {
-                        document.getElementById("character").style.backgroundImage = "url(\"img/character_close.gif\")";
-                    }
+                    console.log(dataArray);
+                    var character = document.getElementById("character").style;
+                    //character.backgroundImage = "url(\"img/character_open.gif\")";
                 }
 
                 speak();
             }).catch(function(err){
                 console.log(err);
-            }); */
-
-            document.addEventListener('dblclick', function(event) {
-                var interface = document.getElementById("interface").style;
-                interface.visibility = "visible";
-            })
+            });
 
             function resize(px, fl) {
                 var character = document.getElementById("character").style;
@@ -74,6 +63,11 @@
                 var interface = document.getElementById("interface").style;
                 interface.visibility = "hidden";
             }
+
+            document.addEventListener('dblclick', function(event) {
+                var interface = document.getElementById("interface").style;
+                interface.visibility = "visible";
+            })
         </script>
     </head>
     <body>
