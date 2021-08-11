@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Scribbletuber</title>
         <style>
+            * {
+                font-family: 'Segoe UI';
+            }
             #character {
                 background-image: url("img/character_close.gif");
                 background-size: contain;
@@ -18,9 +21,30 @@
                 position: absolute;
                 z-index: 1;
             }
+            #interface fieldset, #interface legend {
+                background-color: #FFF;
+                border: none;
+                margin: 0;
+                padding: 0;
+            }
+            #interface legend {
+                font-size: large;
+                font-weight: bold;
+                padding: 4px 20px 0px 20px;
+            }
+            #interface .form {
+                padding: 20px;
+            }
+            #interface #size {
+                vertical-align: middle;
+                margin-bottom: 5px;
+            }
+            #reset {
+                float: right;
+            }
         </style>
         <script>            
-            var constraints = {audio: true, video: false};
+            /*var constraints = {audio: true, video: false};
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
                 var audio = new AudioContext();
                 var analyzer = audio.createAnalyser();
@@ -41,7 +65,7 @@
                 speak();
             }).catch(function(err){
                 console.log(err);
-            });
+            });*/
 
             function resize(px, fl) {
                 var character = document.getElementById("character").style;
@@ -75,14 +99,17 @@
         <div id="interface">
             <fieldset>
                 <legend>Configuration</legend>
-                <form>
-                    <label for="size">Size</label>
-                    <input type="range" id="size" min="300" max="1000" value="500" step="1" oninput="resize(value, 0)">
-                    <output for="size" id="size_output">500px</output>
-                    <input type="reset" value="Reset Size" onclick="resize(0, 1)">
-                </form>
-                <hr />
-                <input type="button" id="hide_interface" value="Hide" onclick="hideInterface()"></button>
+                <div class="form">
+                    <form>
+                        <label for="size">Size</label>
+                        <input type="range" id="size" min="300" max="1000" value="500" step="1" oninput="resize(value, 0)">
+                        <output for="size" id="size_output">500px</output>
+                        <input type="reset" id="reset" value="Reset Size" onclick="resize(0, 1)">
+                    </form>
+                    <hr />
+                    <input type="button" id="hide_interface" value="Hide" onclick="hideInterface()"></button>
+                    <small><em>(Double click on the window to bring back the menu)</em></small>
+                </div>
             </fieldset>
         </div>
     </body>
