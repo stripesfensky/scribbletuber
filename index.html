@@ -41,7 +41,7 @@
                 vertical-align: middle;
                 margin-bottom: 5px;
             }
-            #reset {
+            .reset {
                 float: right;
             }
         </style>
@@ -85,6 +85,20 @@
                 }
             }
 
+            function move(px, fl) {
+                var character = document.getElementById("character").style;
+                var position = document.getElementById("position");
+                var position_output = document.getElementById("position_output");
+
+                if (fl === 0) {
+                    character.right = "calc(50px + " + px + "px)";
+                    position_output.value = "-" + px + "px";
+                }
+                else {
+                    character.right = "50px";
+                }
+            }
+
             function hideInterface() {
                 var interface = document.getElementById("interface").style;
                 interface.visibility = "hidden";
@@ -106,11 +120,17 @@
                         <label for="size">Size</label>
                         <input type="range" id="size" min="300" max="1000" value="500" step="1" oninput="resize(value, 0)">
                         <output for="size" id="size_output">500px</output>
-                        <input type="reset" id="reset" value="Reset Size" onclick="resize(0, 1)">
+                        <input type="reset" class="reset" value="Reset Size" onclick="resize(0, 1)">
+                    </form>
+                    <form>
+                        <label for="position">Position</label>
+                        <input type="range" id="position" min="0" max="1400" value="0" step="1" oninput="move(value, 0)">
+                        <output for="size" id="position_output">0px</output>
+                        <input type="reset" class="reset" value="Reset Position" onclick="move(0, 1)">
                     </form>
                     <hr />
                     <input type="button" id="hide_interface" value="Hide" onclick="hideInterface()"></button>
-                    <small><em>(Double click on the window to bring back the menu)</em></small>
+                    <small><em>(Double click on the window to bring back the configuration menu.)</em></small>
                 </div>
             </fieldset>
         </div>
