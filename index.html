@@ -37,7 +37,7 @@
             #interface .form {
                 padding: 20px;
             }
-            #interface #size {
+            #size, #position {
                 vertical-align: middle;
                 margin-bottom: 5px;
             }
@@ -73,15 +73,20 @@
                 var character = document.getElementById("character").style;
                 var size = document.getElementById("size");
                 var size_output = document.getElementById("size_output");
+                var view_width = document.body.clientWidth;
+                var max_position = view_width - px - 5;
 
                 if (fl === 0) {
                     character.width = px + "px";
                     character.height = px + "px";
                     size_output.value = px + "px";
+                    document.getElementById("position").setAttribute("max", max_position);
                 }
                 else {
                     character.width = "500px";
                     character.height = "500px";
+                    max_position = view_width - 500 - 5;
+                    document.getElementById("position").setAttribute("max", max_position);
                 }
             }
 
@@ -108,6 +113,14 @@
                 var interface = document.getElementById("interface").style;
                 interface.visibility = "visible";
             })
+
+            window.onload = function(event) {
+                var default_size = document.getElementById("size").getAttribute("value");
+                var view_width = document.body.clientWidth;
+                var max_position = view_width - default_size - 5;
+                document.getElementById("position").setAttribute("max", max_position);
+                console.log(document.getElementById("position").getAttribute("max"));
+            };
         </script>
     </head>
     <body>
