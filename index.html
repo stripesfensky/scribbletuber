@@ -8,6 +8,9 @@
             * {
                 font-family: 'Segoe UI';
             }
+            body {
+                background-color: #000;
+            }
             #character {
                 background-image: url("img/character_close.gif");
                 background-size: contain;
@@ -69,24 +72,41 @@
                 console.log(err);
             });*/
 
+            function set_max(px, fl) {
+                var viewport = window.innerWidth;
+                var image_size = 0;
+                var size = document.getElementById("size");
+
+                if (fl === 0) {
+                    image_size = px;
+                }
+                else {
+                    image_size = size.getAttribute("value");
+                }
+
+                // The following calculation is based on the provided character .GIF and must be manually calculated.
+                // To do this, figure out the percentage in comparison to the base image of the whitespace on the left.
+                var padding = image_size * 0.15625;
+                var max_position = viewport - image_size + padding - 100;
+                console.log(max_position);
+                document.getElementById("position").setAttribute("max", max_position);
+            }
+
             function resize(px, fl) {
                 var character = document.getElementById("character").style;
                 var size = document.getElementById("size");
                 var size_output = document.getElementById("size_output");
-                var view_width = document.body.clientWidth;
-                var max_position = view_width - px - 5;
 
                 if (fl === 0) {
                     character.width = px + "px";
                     character.height = px + "px";
                     size_output.value = px + "px";
-                    document.getElementById("position").setAttribute("max", max_position);
+                    set_max(px, 0);                    
                 }
                 else {
                     character.width = "500px";
                     character.height = "500px";
-                    max_position = view_width - 500 - 5;
-                    document.getElementById("position").setAttribute("max", max_position);
+                    set_max(0, 1);
                 }
             }
 
@@ -97,7 +117,12 @@
 
                 if (fl === 0) {
                     character.right = "calc(50px + " + px + "px)";
-                    position_output.value = "-" + px + "px";
+                    if (px > 0) {
+                        position_output.value = "-" + px + "px";
+                    }
+                    else {
+                        position_output.value = px + "px";
+                    }
                 }
                 else {
                     character.right = "50px";
@@ -115,11 +140,7 @@
             })
 
             window.onload = function(event) {
-                var default_size = document.getElementById("size").getAttribute("value");
-                var view_width = document.body.clientWidth;
-                var max_position = view_width - default_size - 5;
-                document.getElementById("position").setAttribute("max", max_position);
-                console.log(document.getElementById("position").getAttribute("max"));
+                set_max(0, 1);
             };
         </script>
     </head>
