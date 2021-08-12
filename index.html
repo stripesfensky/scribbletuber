@@ -66,8 +66,9 @@
                     
                     var average = Math.round(array.reduce((x, y) => x + y) / array.length);
                     var character = document.getElementById("character").style;
+                    console.log(average);
 
-                    if (average > 50) {
+                    if (average > 15) {
                         character.backgroundImage = "url(\"img/character_open.gif\")";
                     }
                     else {
