@@ -40,16 +40,21 @@
             #interface .form {
                 padding: 20px;
             }
-            #size, #position {
+            #size, #position, #volume {
                 vertical-align: middle;
                 margin-bottom: 5px;
             }
             .reset {
                 float: right;
             }
+            .volume {
+                background-color: -internal-light-dark(rgb(255,0,0));
+            }
         </style>
-        <script>            
+        <script>
             var constraints = {audio: true, video: false};
+            var threshold = -85;
+
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
                 var audio = new AudioContext();
                 var analyser = audio.createAnalyser();
@@ -66,9 +71,8 @@
                     
                     var average = Math.round(array.reduce((x, y) => x + y) / array.length);
                     var character = document.getElementById("character").style;
-                    console.log(average);
 
-                    if (average > 15) {
+                    if (average > (100 + threshold)) {
                         character.backgroundImage = "url(\"img/character_open.gif\")";
                     }
                     else {
@@ -103,7 +107,6 @@
 
             function resize(px, fl) {
                 var character = document.getElementById("character").style;
-                var size = document.getElementById("size");
                 var size_output = document.getElementById("size_output");
 
                 if (fl === 0) {
@@ -121,7 +124,6 @@
 
             function move(px, fl) {
                 var character = document.getElementById("character").style;
-                var position = document.getElementById("position");
                 var position_output = document.getElementById("position_output");
 
                 if (fl === 0) {
@@ -135,6 +137,18 @@
                 }
                 else {
                     character.right = "50px";
+                }
+            }
+
+            function vol(db, fl) {
+                var volume_output = document.getElementById("volume_output");
+
+                if (fl === 0) {
+                    threshold = Number(db);
+                    volume_output.value = db + "dB";
+                }
+                else {
+                    threshold = -85;
                 }
             }
 
@@ -159,18 +173,25 @@
             <fieldset>
                 <legend>Configuration</legend>
                 <div class="form">
-                    <div>
+                    <form>
                         <label for="size">Size</label>
                         <input type="range" id="size" min="300" max="1000" value="500" step="1" oninput="resize(value, 0)">
                         <output for="size" id="size_output">500px</output>
                         <input type="reset" class="reset" value="Reset Size" onclick="resize(0, 1)">
-                    </div>
-                    <div>
+                    </form>
+                    <form>
                         <label for="position">Position</label>
                         <input type="range" id="position" min="0" max="1400" value="0" step="1" oninput="move(value, 0)">
                         <output for="size" id="position_output">0px</output>
                         <input type="reset" class="reset" value="Reset Position" onclick="move(0, 1)">
-                    </div>
+                    </form>
+                    <hr />
+                    <form>
+                        <label for="volume">Volume Threshold</label>
+                        <input type="range" class="volume" id="volume" min="-100" max="0" value="-85" step="1" oninput="vol(value, 0)">
+                        <output for="volume" id="volume_output">-85dB</output>
+                        <input type="reset" class="reset" value="Reset Threshold" onclick="vol(0, 1)">
+                    </form>
                     <hr />
                     <input type="button" id="hide_interface" value="Hide" onclick="hideInterface()"></button>
                     <small><em>(Double click on the window to bring back the configuration menu.)</em></small>
