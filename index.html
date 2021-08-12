@@ -57,8 +57,7 @@
                 source.connect(analyser);
                 analyser.smoothingTimeConstant = 0.8;
                 analyser.fftSize = 1024;
-
-
+                
                 var array = new Uint8Array(analyser.frequencyBinCount);
 
                 function speak() {
