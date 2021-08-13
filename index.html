@@ -50,6 +50,9 @@
             .volume {
                 background-color: -internal-light-dark(rgb(255,0,0));
             }
+            .threshold {
+                
+            }
         </style>
         <script>
             var constraints = {audio: true, video: false};
@@ -60,19 +63,20 @@
                 var analyser = audio.createAnalyser();
                 var source = audio.createMediaStreamSource(stream);
                 source.connect(analyser);
-                analyser.smoothingTimeConstant = 0.8;
-                analyser.fftSize = 1024;
                 
                 var array = new Uint8Array(analyser.frequencyBinCount);
 
                 function speak() {
                     drawVisual = requestAnimationFrame(speak);
                     analyser.getByteFrequencyData(array);
+                    for (let i = 0; i < array.length; i++) {
+                        array[i] = (((array[i] * 100) / 255) - 100) * -1;
+                    }
                     
-                    var average = Math.round(array.reduce((x, y) => x + y) / array.length);
+                    var dB = -1 * Math.round(array.reduce((x, y) => x + y) / array.length);
                     var character = document.getElementById("character").style;
 
-                    if (average > (100 + threshold)) {
+                    if (dB > threshold) {
                         character.backgroundImage = "url(\"img/character_open.gif\")";
                     }
                     else {
@@ -192,6 +196,7 @@
                         <output for="volume" id="volume_output">-85dB</output>
                         <input type="reset" class="reset" value="Reset Threshold" onclick="vol(0, 1)">
                     </form>
+                    <div class="threshold"></div>
                     <hr />
                     <input type="button" id="hide_interface" value="Hide" onclick="hideInterface()"></button>
                     <small><em>(Double click on the window to bring back the configuration menu.)</em></small>
