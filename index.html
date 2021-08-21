@@ -83,6 +83,8 @@
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
                 var audio = new AudioContext();
                 var analyser = audio.createAnalyser();
+                analyser.minDecibels = -100;
+                analyser.maxDecibels = 0;
                 var source = audio.createMediaStreamSource(stream);
                 source.connect(analyser);
                 
@@ -91,7 +93,11 @@
                 function speak() {
                     drawVisual = requestAnimationFrame(speak);
                     analyser.getByteFrequencyData(array);
+                    var length = 0;
                     for (let i = 0; i < array.length; i++) {
+                        if (array[i] > 0) { 
+                            length += 1;
+                        }
                         array[i] = (((array[i] * 100) / 255) - 100) * -1;
                     }
                     
@@ -150,36 +156,27 @@
                 }
             }
 
-            function move(px, fl) {
+            function move(px) {
                 var character = document.getElementById("character").style;
                 var position_output = document.getElementById("position_output");
 
-                if (fl === 0) {
-                    character.right = "calc(50px + " + px + "px)";
-                    if (px > 0) {
-                        position_output.value = "-" + px + "px";
-                    }
-                    else {
-                        position_output.value = px + "px";
-                    }
+                character.right = "calc(50px + " + px + "px)";
+                
+                if (px > 0) {
+                    position_output.value = "-" + px + "px";
                 }
                 else {
-                    character.right = "50px";
+                    position_output.value = px + "px";
                 }
             }
 
-            function vol(db, fl) {
+            function vol(db) {
                 var volume_output = document.getElementById("volume_output");
                 var marker = document.getElementById("marker").style;
 
-                if (fl === 0) {
-                    threshold = Number(db);
-                    volume_output.value = db + "dB";
-                    marker.marginLeft = "calc(" + (100 + Number(db)) + "% - 3px)";
-                }
-                else {
-                    threshold = -85;
-                }
+                threshold = Number(db);
+                volume_output.value = db + "dB";
+                marker.marginLeft = "calc(" + (100 + threshold) + "% - 3px)";
             }
 
             function hideInterface() {
@@ -211,16 +208,16 @@
                     </form>
                     <form>
                         <label for="position">Position</label>
-                        <input type="range" id="position" min="0" max="1400" value="0" step="1" oninput="move(value, 0)">
+                        <input type="range" id="position" min="0" max="1400" value="0" step="1" oninput="move(value)">
                         <output for="size" id="position_output">0px</output>
-                        <input type="reset" class="reset" value="Reset Position" onclick="move(0, 1)">
+                        <input type="reset" class="reset" value="Reset Position" onclick="move(0)">
                     </form>
                     <hr />
                     <form>
                         <label for="volume">Volume Threshold</label>
-                        <input type="range" class="volume" id="volume" min="-100" max="0" value="-85" step="1" oninput="vol(value, 0)">
+                        <input type="range" class="volume" id="volume" min="-100" max="0" value="-85" step="1" oninput="vol(value)">
                         <output for="volume" id="volume_output">-85dB</output>
-                        <input type="reset" class="reset" value="Reset Threshold" onclick="vol(0, 1)">
+                        <input type="reset" class="reset" value="Reset Threshold" onclick="vol(-85)">
                     </form>
                     <div id="threshold"><div id="bar"></div></div>
                     <div id="threshold-marker"><div id="marker"></div></div>
