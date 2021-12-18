@@ -70,7 +70,7 @@
             #marker {
                 width: 0;
                 height: 0;
-                margin-left: calc(15% - 3px);
+                margin-left: calc(85% - 3px);
                 border-left: 7px solid transparent;
                 border-right: 7px solid transparent;
                 border-bottom: 14px solid #787878;
@@ -78,7 +78,7 @@
         </style>
         <script>
             var constraints = {audio: true, video: false};
-            var threshold = -85;
+            var threshold = -15;
 
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
                 var audio = new AudioContext();
@@ -88,17 +88,15 @@
                 var source = audio.createMediaStreamSource(stream);
                 source.connect(analyser);
                 
-                var array = new Uint8Array(analyser.frequencyBinCount);
+                var buffer = new Float32Array(analyser.fftSize);
 
                 function speak() {
                     drawVisual = requestAnimationFrame(speak);
-                    analyser.getByteFrequencyData(array);
-                    for (let i = 0; i < array.length; i++) {
-                        array[i] = (((array[i] * 100) / 255) - 100) * -1;
+                    analyser.getFloatTimeDomainData(buffer);
+                    for (let i = 0; i < buffer.length; i++) {
+                        buffer[i] = buffer[i] * buffer[i];
                     }
-                    console.log(array);
-                    
-                    var dB = -1 * Math.round(array.reduce((x, y) => x + y) / array.length);
+                    var dB = 10 * Math.log10(buffer.reduce((x, y) => x + y) / buffer.length);
                     var character = document.getElementById("character").style;
 
                     document.getElementById("bar").style.width = (100 + dB) + "%";
@@ -212,9 +210,9 @@
                     <hr />
                     <form>
                         <label for="volume">Volume Threshold</label>
-                        <input type="range" class="volume" id="volume" min="-100" max="0" value="-85" step="1" oninput="vol(value)">
-                        <output for="volume" id="volume_output">-85dB</output>
-                        <input type="reset" class="reset" value="Reset Threshold" onclick="vol(-85)">
+                        <input type="range" class="volume" id="volume" min="-100" max="0" value="-15" step="1" oninput="vol(value)">
+                        <output for="volume" id="volume_output">-15dB</output>
+                        <input type="reset" class="reset" value="Reset Threshold" onclick="vol(-15)">
                     </form>
                     <div id="threshold"><div id="bar"></div></div>
                     <div id="threshold-marker"><div id="marker"></div></div>
